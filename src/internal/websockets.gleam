@@ -14,10 +14,6 @@ pub fn new_priv_msg(msg: String) -> Msg {
   PrivMsg(msg)
 }
 
-pub fn send_message(subj, msg) {
-  stratus.send_message(subj, msg)
-}
-
 pub type Message =
   stratus.InternalMessage(Msg)
 

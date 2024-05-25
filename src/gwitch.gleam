@@ -2,7 +2,7 @@ import auth.{type LoginCredentials}
 import gleam/erlang/process.{type Subject}
 import gleam/http/request
 import gleam/option.{type Option, Some}
-import internal/websockets.{type Message, new_priv_msg, send_message}
+import internal/websockets.{type Message, new_priv_msg}
 import stratus
 
 const twitch_server = "http://irc-ws.chat.twitch.tv"
@@ -36,10 +36,12 @@ pub fn get_twitch_subj() -> Subject(Message) {
 }
 
 /// A function for joining a Twitch channel
-pub fn join_channel(
-  subj: Subject(stratus.InternalMessage(websockets.Msg)),
-  channel: String,
-) {
+pub fn join_channel(subj: Subject(Message), channel: String) {
   // Send the join message to the WebSocket process
-  send_message(subj, new_priv_msg("JOIN #" <> channel))
+  send_message(subj, "JOIN #" <> channel)
+}
+
+// A function for sending a message to a Twitch channel
+pub fn send_message(subj: Subject(Message), msg: String) {
+  stratus.send_message(subj, new_priv_msg(msg))
 }
