@@ -10,16 +10,21 @@ gleam add gwitch
 import gwitch
 
 pub fn main() {
-  // TODO: An example of the project in use
+  // Connect to the Twitch channel "criken" with an anonymous user, returning a subject to receive messages
+  let subj = gwitch.connect("criken", None)
+  // Start a process that will monitor the connection
+  let done =
+    // Create a selector that will receive messages from the WebSocket process
+    process.new_selector()
+    // Monitor for the WebSocket process to go down
+    |> process.selecting_process_down(
+      // Start the WebSocket monitoring process
+      process.monitor_process(process.subject_owner(subj)),
+      function.identity,
+    )
+    // Continously receive messages from the WebSocket process
+    |> process.select_forever
 }
 ```
 
 Further documentation can be found at <https://hexdocs.pm/gwitch>.
-
-## Development
-
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
-gleam shell # Run an Erlang shell
-```
