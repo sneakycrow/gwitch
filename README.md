@@ -7,6 +7,7 @@ A library for reading and writing messages to Twitch IRC
 
 ## Features
 - [x] Read Messages from Twitch Chat
+- [ ] Parses Twitch metadata out of IRC Message
 - [ ] Send Messages to Twitch Chat
 
 ## Usage
