@@ -3,6 +3,11 @@
 [![Package Version](https://img.shields.io/hexpm/v/gwitch)](https://hex.pm/packages/gwitch)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/gwitch/)
 
+## Features
+- [x] Read Messages from Twitch Chat
+- [ ] Send Messages to Twitch Chat
+
+## Usage
 ```sh
 gleam add gwitch
 ```
