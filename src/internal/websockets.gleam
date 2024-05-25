@@ -1,45 +1,60 @@
 import gleam/erlang/process
 import gleam/http/request.{type Request}
 import gleam/io
-import gleam/option.{type Option}
+import gleam/option.{type Option, None, Some}
 import gleam/otp/actor
 import stratus
 
-pub type Msg {
+pub opaque type Msg {
   Close
-  Message(String)
+  PrivMsg(String)
 }
 
+pub fn new_priv_msg(msg: String) -> Msg {
+  PrivMsg(msg)
+}
+
+pub fn send_message(subj, msg) {
+  stratus.send_message(subj, msg)
+}
+
+pub type Message =
+  stratus.InternalMessage(Msg)
+
+pub type ReceiveMessageFn =
+  fn(String) -> Nil
+
 // TODO: Add parser to parse out metadata from irc message
-// TODO: Add ability to pass closure to handle messages
 pub fn create_websockets_builder(
   req: Request(String),
-  initializer: fn() -> #(a, Option(process.Selector(Msg))),
-) -> Result(process.Subject(stratus.InternalMessage(Msg)), actor.StartError) {
+  receive_message: Option(ReceiveMessageFn),
+) -> Result(process.Subject(Message), actor.StartError) {
   let builder =
     stratus.websocket(
       request: req,
-      init: initializer,
+      init: fn() { #(Nil, None) },
       loop: fn(msg, state, conn) {
         case msg {
           stratus.Text(msg) -> {
-            io.println("Received message " <> msg)
-            // let assert Ok(_resp) = stratus.send_text_message(conn, "hello, world!")
-            // io.debug(#("Sent message response", resp))
+            io.debug("Receiving message: " <> msg)
+            // TODO: Parse out metadata from irc message
+            case receive_message {
+              None -> Nil
+              Some(func) -> func(msg)
+            }
             actor.continue(state)
           }
-          stratus.User(Message(msg)) -> {
-            io.debug(#("Sent message", msg))
+          stratus.User(PrivMsg(msg)) -> {
+            io.debug(#("Sending message: ", msg))
             let assert Ok(_resp) = stratus.send_text_message(conn, msg)
-            // io.debug(#("Sent message response", resp))
             actor.continue(state)
           }
           stratus.Binary(_msg) -> {
-            io.debug("Received binary message")
+            io.debug("Receiving binary message")
             actor.continue(state)
           }
           stratus.User(Close) -> {
-            io.debug("Close message sent")
+            io.debug("Sending close message")
             let assert Ok(_) = stratus.close(conn)
             actor.Stop(process.Normal)
           }
