@@ -1,7 +1,7 @@
 import gleam/erlang/process
 import gleam/function
 import gleam/io
-import gleam/option.{None, Some}
+import gleam/option.{None}
 import logging
 import twitch/chat
 

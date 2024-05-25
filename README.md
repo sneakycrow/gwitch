@@ -1,20 +1,20 @@
-# twitchbot
+# gwitch
 
-[![Package Version](https://img.shields.io/hexpm/v/twitchbot)](https://hex.pm/packages/twitchbot)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/twitchbot/)
+[![Package Version](https://img.shields.io/hexpm/v/gwitch)](https://hex.pm/packages/gwitch)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/gwitch/)
 
 ```sh
-gleam add twitchbot
+gleam add gwitch
 ```
 ```gleam
-import twitchbot
+import gwitch
 
 pub fn main() {
   // TODO: An example of the project in use
 }
 ```
 
-Further documentation can be found at <https://hexdocs.pm/twitchbot>.
+Further documentation can be found at <https://hexdocs.pm/gwitch>.
 
 ## Development
 
