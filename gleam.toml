@@ -1,5 +1,6 @@
 name = "twitchbot"
 version = "1.0.0"
+gleam = ">= 0.32.0"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
 # your project to the Hex package manager.
@@ -14,8 +15,13 @@ version = "1.0.0"
 
 [dependencies]
 gleam_stdlib = ">= 0.34.0 and < 2.0.0"
-glitch = ">= 0.0.6 and < 1.0.0"
-dotenv = ">= 3.1.0 and < 4.0.0"
+gleam_erlang = ">= 0.25.0 and < 1.0.0"
+stratus = ">= 0.7.0 and < 1.0.0"
+gleam_http = ">= 3.6.0 and < 4.0.0"
+gleam_otp = ">= 0.10.0 and < 1.0.0"
+repeatedly = ">= 2.1.1 and < 3.0.0"
+logging = ">= 1.1.0 and < 2.0.0"
+birl = ">= 1.6.1 and < 2.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
