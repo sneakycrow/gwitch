@@ -41,7 +41,7 @@ pub fn join_channel(subj: Subject(Message), channel: String) {
   send_message(subj, "JOIN #" <> channel)
 }
 
-// A function for sending a message to a Twitch channel
+/// A function for sending a message to a Twitch channel
 pub fn send_message(subj: Subject(Message), msg: String) {
   stratus.send_message(subj, new_priv_msg(msg))
 }
