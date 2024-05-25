@@ -1,5 +1,7 @@
 # gwitch
 
+A library for reading and writing messages to Twitch IRC
+
 [![Package Version](https://img.shields.io/hexpm/v/gwitch)](https://hex.pm/packages/gwitch)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/gwitch/)
 
