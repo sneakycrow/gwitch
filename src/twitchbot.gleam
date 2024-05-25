@@ -1,19 +1,18 @@
 import gleam/erlang/process
 import gleam/function
+import gleam/io
+import gleam/option.{None, Some}
 import logging
 import twitch/chat
 
-// TODO: Login to Twitch after connecting to the WebSocket
 pub fn main() {
   // Configure the logger
   logging.configure()
   set_logger_level(Level, Debug)
-  // Get our Twitch chat subject, which will be used to monitor the WebSocket connection
-  let subj = chat.get_twitch_subj()
-  // Login so we can stay connected
-  chat.login_anon(subj)
+  // Connect to the Twitch channel
+  let subj = chat.connect("thesneakycrow", None)
   // Create a process that will manage the WebSocket connection and stop when the WebSocket process goes down
-  let _process_complete =
+  let done =
     // Create a selector that will receive messages from the WebSocket process
     process.new_selector()
     // Monitor for the WebSocket process to go down
@@ -24,6 +23,10 @@ pub fn main() {
     )
     // Continously receive messages from the WebSocket process
     |> process.select_forever
+
+  case done {
+    _ -> io.print("exiting...later skater!")
+  }
 }
 
 pub type LogLevel {
