@@ -1,5 +1,5 @@
 name = "gwitch"
-version = "1.0.0"
+version = "1.0.1"
 gleam = ">= 0.32.0"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
