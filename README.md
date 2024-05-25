@@ -7,6 +7,7 @@
 gleam add gwitch
 ```
 ```gleam
+import gleam/erlang/process
 import gwitch
 
 pub fn main() {
