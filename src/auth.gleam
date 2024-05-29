@@ -1,6 +1,6 @@
 import gleam/erlang/process.{type Subject}
 import gleam/option.{type Option, None, Some}
-import internal/websockets.{type Message, new_priv_msg}
+import internal/websockets.{type Message, Message}
 import stratus
 
 /// Credentials for authenticating with Twitch
@@ -17,6 +17,6 @@ pub fn login(subj: Subject(Message), creds: Option(LoginCredentials)) {
     None -> #("justinfan123", "gibberish")
   }
   // Send the login message to the WebSocket process
-  stratus.send_message(subj, new_priv_msg("NICK " <> username))
-  stratus.send_message(subj, new_priv_msg("PASS " <> password))
+  stratus.send_message(subj, Message("PASS " <> password))
+  stratus.send_message(subj, Message("NICK " <> username))
 }
