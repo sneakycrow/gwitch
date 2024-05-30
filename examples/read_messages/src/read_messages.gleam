@@ -1,5 +1,6 @@
 import gleam/erlang/process
 import gleam/function
+import gleam/option.{None}
 import gwitch.{connect, create_config}
 import logging
 
@@ -19,9 +20,19 @@ pub fn main() {
   // NOTE:  This isn't strictly necessary at all (including the associated
   // stuff above). It's included just to show the debug logging.
   set_logger_level(Level, Debug)
-  let channel = "cyr"
-  let config = create_config()
-  let subj = connect(channel, config)
+  let subj =
+    create_config(None, fn(msg: gwitch.TwitchMessage) {
+      case msg.message_type {
+        gwitch.Ping -> {
+          logging.log(logging.Info, "Received ping, will we pong?")
+        }
+        _ -> {
+          // Ignore all other message types
+          logging.log(logging.Debug, gwitch.to_pretty_string(msg))
+        }
+      }
+    })
+    |> connect("nmplol")
   // Start a process that will monitor the connection
   let _done =
     // Create a selector that will receive messages from the WebSocket process
