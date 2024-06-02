@@ -1,7 +1,9 @@
 import gleam/erlang/process
 import gleam/function
+import gleam/io
 import gwitch.{connect}
-import gwitch/auth.{default_config}
+import gwitch/auth.{create_config, create_credentials}
+import gwitch/messages.{type TwitchMessage}
 import logging
 
 pub type LogLevel {
@@ -16,23 +18,29 @@ pub type Log {
 fn set_logger_level(log: Log, level: LogLevel) -> Nil
 
 pub fn main() {
+  // Configure the logger to monitor the WebSocket connection
   logging.configure()
-  // NOTE:  This isn't strictly necessary at all (including the associated
-  // stuff above). It's included just to show the debug logging.
   set_logger_level(Level, Debug)
-  let subj =
-    default_config()
-    |> connect("criken")
-  // Start a process that will monitor the connection
-  let _done =
-    // Create a selector that will receive messages from the WebSocket process
-    process.new_selector()
-    // Monitor for the WebSocket process to go down
-    |> process.selecting_process_down(
-      // Start the WebSocket monitoring process
-      process.monitor_process(process.subject_owner(subj)),
-      function.identity,
-    )
-    // Continously receive messages from the WebSocket process
-    |> process.select_forever
+  // Create a selector that will receive messages from the WebSocket process
+  process.new_selector()
+  // Monitor for the WebSocket process to go down
+  |> process.selecting_process_down(
+    // Start the WebSocket monitoring process
+    process.monitor_process(process.subject_owner(
+      // Create credentials, configure the connection, and finally connect to the Twitch server, returning a subject
+      create_credentials("justinfan1234", "password")
+      |> create_config(log_message)
+      |> connect("criken"),
+    )),
+    function.identity,
+  )
+  // Continously receive messages from the WebSocket process
+  |> process.select_forever
+}
+
+// A basic function that simply logs the message and returns it
+fn log_message(msg: TwitchMessage) -> TwitchMessage {
+  messages.to_string(msg) |> io.debug
+
+  msg
 }
