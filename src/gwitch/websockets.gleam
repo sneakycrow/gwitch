@@ -3,6 +3,7 @@ import gleam/http/request.{type Request}
 import gleam/io
 import gleam/option.{type Option, None, Some}
 import gleam/otp/actor
+import gwitch/messages.{type TwitchMessage}
 import stratus
 
 pub type Msg {
@@ -15,7 +16,7 @@ pub type Message =
 
 pub fn create_websockets_builder(
   req: Request(String),
-  receive_message: Option(fn(String) -> Nil),
+  receive_message: Option(fn(String) -> TwitchMessage),
 ) -> Result(process.Subject(Message), actor.StartError) {
   let builder =
     stratus.websocket(
@@ -27,7 +28,16 @@ pub fn create_websockets_builder(
             case receive_message {
               None -> Nil
               Some(func) -> {
-                func(msg)
+                let twitch_msg = func(msg)
+                case twitch_msg {
+                  // Automatically respond to pings to keep the connection alive
+                  messages.Ping(ping_message) -> {
+                    let pong = "PONG " <> ping_message
+                    let assert Ok(_resp) = stratus.send_text_message(conn, pong)
+                    Nil
+                  }
+                  _ -> Nil
+                }
               }
             }
             actor.continue(state)
