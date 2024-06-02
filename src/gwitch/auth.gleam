@@ -7,8 +7,16 @@ import stratus
 
 /// Credentials for authenticating with Twitch
 /// Not required for anonymous connections
-pub type LoginCredentials {
+pub opaque type LoginCredentials {
   Static(username: String, password: String)
+}
+
+/// A function for creating a new set of credentials
+pub fn create_credentials(
+  username: String,
+  password: String,
+) -> Option(LoginCredentials) {
+  Some(Static(username, password))
 }
 
 /// A function for logging into Twitch
